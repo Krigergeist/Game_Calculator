@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id" class="bg-gray-900 text-gray-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DPS Calculator - The Forge Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "forge-primary": "#e11d48",
+              "forge-accent": "#f43f5e",
+              "forge-dark": "#111827",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-gray-950 via-forge-dark to-black"
+  >
+    <div class="container mx-auto px-4 py-10 max-w-4xl">
+      <div class="text-center mb-10">
+        <h1
+          class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-pink-600"
+        >
+          DPS Calculator
+        </h1>
+        <p class="text-gray-400 mt-3">
+          Estimasi Damage Per Second - The Forge Edition
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Input Section -->
+        <div
+          class="bg-gray-800/70 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-gray-700/50"
+        >
+          <h2
+            class="text-2xl font-semibold text-rose-400 mb-6 pb-2 border-b border-rose-900/50"
+          >
+            Input Stats
+          </h2>
+
+          <div class="space-y-5">
+            <!-- Base Damage -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-1"
+                >Base Damage</label
+              >
+              <input
+                type="number"
+                id="baseDmg"
+                value="35"
+                class="w-full px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+              />
+            </div>
+
+            <!-- Bonus Damage % -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-1"
+                >Tambahan Damage (%)</label
+              >
+              <input
+                type="number"
+                id="bonusDmg"
+                value="0"
+                step="0.1"
+                class="w-full px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+              />
+            </div>
+
+            <!-- Attack Speed (seconds per attack) -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-1"
+                >Attack Interval (detik)</label
+              >
+              <input
+                type="number"
+                id="atkInterval"
+                value="0.35"
+                step="0.01"
+                min="0.01"
+                class="w-full px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+              />
+            </div>
+
+            <!-- Bonus Attack Speed % -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-1"
+                >Tambahan Attack Speed (%)</label
+              >
+              <input
+                type="number"
+                id="bonusAtkSpd"
+                value="0"
+                step="0.1"
+                class="w-full px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+              />
+            </div>
+
+            <!-- Crit Rate -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-1"
+                >Critical Rate (%)</label
+              >
+              <input
+                type="number"
+                id="critRate"
+                value="5"
+                min="0"
+                max="100"
+                step="0.1"
+                class="w-full px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+              />
+            </div>
+
+            <!-- Crit Damage Multiplier -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-1"
+                >Critical Damage (x)</label
+              >
+              <input
+                type="number"
+                id="critDmg"
+                value="2"
+                step="0.1"
+                min="1"
+                class="w-full px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+              />
+            </div>
+
+            <!-- Explosion -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-1"
+                  >Explosion Chance (%)</label
+                >
+                <input
+                  type="number"
+                  id="explChance"
+                  value="0"
+                  min="0"
+                  max="100"
+                  step="0.1"
+                  class="w-full px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-1"
+                  >Explosion Damage (%)</label
+                >
+                <input
+                  type="number"
+                  id="explDmg"
+                  value="0"
+                  min="0"
+                  step="0.1"
+                  class="w-full px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            id="calculateBtn"
+            class="mt-8 w-full bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transform hover:scale-[1.02] transition-all duration-300"
+          >
+            HITUNG DPS
+          </button>
+        </div>
+
+        <!-- Result Section -->
+        <div
+          class="bg-gray-800/70 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-gray-700/50 flex flex-col"
+        >
+          <h2
+            class="text-2xl font-semibold text-rose-400 mb-6 pb-2 border-b border-rose-900/50"
+          >
+            Hasil Perhitungan
+          </h2>
+
+          <div class="flex-1 flex flex-col justify-center space-y-8">
+            <div class="text-center">
+              <div class="text-sm text-gray-400 uppercase tracking-wider">
+                Average DPS
+              </div>
+              <div
+                id="resultDps"
+                class="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-500 mt-2"
+              >
+                0.00
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 text-center text-sm">
+              <div
+                class="bg-gray-900/50 p-4 rounded-xl border border-gray-700/50"
+              >
+                <div class="text-gray-400">Normal Hit</div>
+                <div
+                  id="normalHit"
+                  class="text-xl font-bold text-rose-300 mt-1"
+                >
+                  0.0
+                </div>
+              </div>
+              <div
+                class="bg-gray-900/50 p-4 rounded-xl border border-gray-700/50"
+              >
+                <div class="text-gray-400">Crit Hit</div>
+                <div id="critHit" class="text-xl font-bold text-amber-400 mt-1">
+                  0.0
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="text-center text-sm bg-gray-900/40 p-4 rounded-xl border border-gray-700/40"
+            >
+              <div class="text-gray-400">Kontribusi Explosion (rata-rata)</div>
+              <div
+                id="explContribution"
+                class="text-lg font-semibold text-cyan-400 mt-1"
+              >
+                0.00
+              </div>
+            </div>
+          </div>
+
+          <div class="text-xs text-center text-gray-500 mt-8">
+            *Perhitungan rata-rata teoritis tanpa mempertimbangkan
+            cooldown/animation cancel
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const calculateBtn = document.getElementById("calculateBtn");
+
+      calculateBtn.addEventListener("click", () => {
+        // Ambil semua input
+        const base = Number(document.getElementById("baseDmg").value) || 0;
+        const bonusDmg = Number(document.getElementById("bonusDmg").value) || 0;
+        const interval =
+          Number(document.getElementById("atkInterval").value) || 0.35;
+        const bonusAtkSpd =
+          Number(document.getElementById("bonusAtkSpd").value) || 0;
+        const critRate =
+          Number(document.getElementById("critRate").value) / 100 || 0;
+        const critMult = Number(document.getElementById("critDmg").value) || 2;
+        const explChance =
+          Number(document.getElementById("explChance").value) / 100 || 0;
+        const explMult =
+          Number(document.getElementById("explDmg").value) / 100 || 0;
+
+        // Hitung final damage per hit
+        const finalBaseDmg = base * (1 + bonusDmg / 100);
+
+        // Hitung attack per second
+        let baseAtkPerSec = 1 / Math.max(0.01, interval);
+        const finalAtkPerSec = baseAtkPerSec * (1 + bonusAtkSpd / 100);
+
+        // Damage normal & crit
+        const normalHit = finalBaseDmg;
+        const critHit = finalBaseDmg * critMult;
+
+        // Expected damage per hit (tanpa explosion dulu)
+        const expectedDmgPerHit =
+          normalHit * (1 - critRate) + critHit * critRate;
+
+        // Tambahan dari explosion (dianggap tambahan damage, bukan menggantikan)
+        const explDmgPerHit = finalBaseDmg * explMult * explChance;
+
+        // Total expected damage per hit
+        const totalExpectedDmgPerHit = expectedDmgPerHit + explDmgPerHit;
+
+        // Final DPS
+        const dps = totalExpectedDmgPerHit * finalAtkPerSec;
+
+        // Tampilkan hasil
+        document.getElementById("resultDps").textContent = dps.toFixed(2);
+        document.getElementById("normalHit").textContent = normalHit.toFixed(1);
+        document.getElementById("critHit").textContent = critHit.toFixed(1);
+        document.getElementById(
+          "explContribution"
+        ).textContent = `+${explDmgPerHit.toFixed(2)} (${(
+          (explDmgPerHit / totalExpectedDmgPerHit) *
+          100
+        ).toFixed(1)}%)`;
+      });
+    </script>
+  </body>
+</html>
